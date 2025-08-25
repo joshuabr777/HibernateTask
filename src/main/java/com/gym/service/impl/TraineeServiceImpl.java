@@ -3,6 +3,7 @@ package com.gym.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.gym.entity.Trainee;
@@ -15,7 +16,7 @@ import com.gym.service.TraineeService;
 import com.gym.service.TrainingService;
 import com.gym.service.UserService;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,7 +35,7 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Autowired
     public TraineeServiceImpl(TraineeRepository traineeRepository, UserService userService,
-                              AuthenticationService authenticationService, TrainingService trainingService) {
+                              AuthenticationService authenticationService, @Lazy TrainingService trainingService) {
         this.traineeRepository = traineeRepository;
         this.userService = userService;
         this.authenticationService = authenticationService;
@@ -79,6 +80,7 @@ public class TraineeServiceImpl implements TraineeService {
      * @return Optional<Trainee> if authentication is successful
      */
     @Override
+    @Transactional(readOnly = true)
     public Optional<Trainee> authenticateTrainee(String username, String password) {
         authenticateOrThrow(username, password);
         return traineeRepository.findByUsername(username);
@@ -91,6 +93,7 @@ public class TraineeServiceImpl implements TraineeService {
      * @return Optional<Trainee>
      */
     @Override
+    @Transactional(readOnly = true)
     public Optional<Trainee> findByUsername(String username) {
         if (isBlank(username)) return Optional.empty();
         return traineeRepository.findByUsername(username.trim());
@@ -103,6 +106,7 @@ public class TraineeServiceImpl implements TraineeService {
      * @return Optional<Trainee>
      */
     @Override
+    @Transactional(readOnly = true)
     public Optional<Trainee> findById(Long id) {
         if (id == null) return Optional.empty();
         return traineeRepository.findById(id);
@@ -215,6 +219,7 @@ public class TraineeServiceImpl implements TraineeService {
      * @return list of Trainings
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Training> getTraineeTrainings(String username, String password,
                                                LocalDate fromDate, LocalDate toDate,
                                                String trainerName, String trainingTypeName) {
@@ -230,6 +235,7 @@ public class TraineeServiceImpl implements TraineeService {
      * @return list of Trainers
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Trainer> getUnassignedTrainers(String username, String password) {
         authenticateOrThrow(username, password);
         return traineeRepository.findUnassignedTrainers(username);

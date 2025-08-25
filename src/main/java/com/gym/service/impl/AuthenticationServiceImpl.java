@@ -9,7 +9,7 @@ import com.gym.entity.User;
 import com.gym.repository.UserRepository;
 import com.gym.service.AuthenticationService;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -32,6 +32,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @return Optional<User> containing the authenticated user if successful, empty otherwise
      */
     @Override
+    @Transactional(readOnly = true)
     public Optional<User> authenticate(String username, String password) {
         if (isBlank(username)) {
             log.debug("Authentication failed: username is null or empty");
@@ -64,6 +65,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @return boolean indicating if user is valid and active
      */
     @Override
+    @Transactional(readOnly = true)
     public boolean isUserActiveByUsername(String username) {
         if (isBlank(username)) return false;
 

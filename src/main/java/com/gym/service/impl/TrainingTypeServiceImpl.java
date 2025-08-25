@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gym.entity.TrainingType;
 import com.gym.repository.TrainingTypeRepository;
@@ -30,6 +31,7 @@ public class TrainingTypeServiceImpl implements TrainingTypeService{
      * @return Optional<TrainingType>
      */
     @Override
+    @Transactional(readOnly = true)
     public Optional<TrainingType> findById(Long id) {
         if (id == null) {
             return Optional.empty();
@@ -43,6 +45,7 @@ public class TrainingTypeServiceImpl implements TrainingTypeService{
      * @return Optional<TrainingType>
      */
     @Override
+    @Transactional(readOnly = true)
     public Optional<TrainingType> findByName(String name) {
         if (isBlank(name)) {
             return Optional.empty();
@@ -55,6 +58,7 @@ public class TrainingTypeServiceImpl implements TrainingTypeService{
      * @return List of all training types
      */
     @Override
+    @Transactional(readOnly = true)
     public List<TrainingType> findAll() {
         List<TrainingType> types = trainingTypeRepository.findAll();
         log.debug("Found {} training types", types.size());
@@ -66,6 +70,7 @@ public class TrainingTypeServiceImpl implements TrainingTypeService{
      * @param id the training type ID
      * @return boolean indicating existence
      */
+    @Transactional(readOnly = true)
     public boolean existsById(Long id) {
         if (id == null) {
             return false;
@@ -85,6 +90,7 @@ public class TrainingTypeServiceImpl implements TrainingTypeService{
      * @return boolean indicating existence
      */
     @Override
+    @Transactional(readOnly = true)
     public boolean existsByName(String name) {
         if (isBlank(name)) {
             return false;

@@ -17,7 +17,7 @@ import com.gym.service.TrainerService;
 import com.gym.service.TrainingService;
 import com.gym.service.TrainingTypeService;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -91,6 +91,7 @@ public class TrainingServiceImpl implements TrainingService {
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true)
     @Override
     public Optional<Training> findById(Long id) {
         if (id == null) return Optional.empty();
@@ -100,6 +101,7 @@ public class TrainingServiceImpl implements TrainingService {
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true)
     @Override
     public List<Training> findTraineeTrainings(String traineeUsername, LocalDate fromDate, LocalDate toDate,
                                                String trainerName, String trainingTypeName) {
@@ -117,6 +119,7 @@ public class TrainingServiceImpl implements TrainingService {
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true)
     @Override
     public List<Training> findTrainerTrainings(String trainerUsername, LocalDate fromDate, LocalDate toDate,
                                                String traineeName) {

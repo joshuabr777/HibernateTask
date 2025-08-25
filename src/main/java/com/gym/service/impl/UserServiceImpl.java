@@ -10,7 +10,7 @@ import com.gym.repository.UserRepository;
 import com.gym.service.UserService;
 import com.gym.util.Helpers;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService {
      * @return Optional<User>
      */
     @Override
+    @Transactional(readOnly = true)
     public Optional<User> findById(Long id) {
         if (id == null) {
             log.debug("User ID is null");
@@ -83,6 +84,7 @@ public class UserServiceImpl implements UserService {
      * @return Optional<User>
      */
     @Override
+    @Transactional(readOnly = true)
     public Optional<User> findByUsername(String username) {
         if (isBlank(username)) {
             log.debug("Username is null or empty");
@@ -174,6 +176,7 @@ public class UserServiceImpl implements UserService {
      * @return List of all users
      */
     @Override
+    @Transactional(readOnly = true)
     public List<User> findAll() {
         log.debug("Finding all users");
         return userRepository.findAll();

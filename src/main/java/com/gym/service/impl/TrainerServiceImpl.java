@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.gym.entity.Trainer;
@@ -20,7 +21,7 @@ import com.gym.service.TrainingService;
 import com.gym.service.TrainingTypeService;
 import com.gym.service.UserService;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TrainerServiceImpl implements TrainerService {
@@ -39,7 +40,7 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Autowired
     public TrainerServiceImpl(TrainerRepository trainerRepository, UserService userService,
-                               AuthenticationService authenticationService, TrainingService trainingService,
+                               AuthenticationService authenticationService, @Lazy TrainingService trainingService,
                                TrainingTypeService trainingTypeService) {
         this.trainerRepository = trainerRepository;
         this.userService = userService;
@@ -135,6 +136,7 @@ public class TrainerServiceImpl implements TrainerService {
      * @return the list of trainings for the trainer
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Training> getTrainerTrainings(String username, String password,
                                               LocalDate fromDate, LocalDate toDate,
                                               String traineeName) {
@@ -199,6 +201,7 @@ public class TrainerServiceImpl implements TrainerService {
      * Authenticates a trainer (requires authentication)
      */
     @Override
+    @Transactional(readOnly = true)
     public Optional<Trainer> authenticateTrainer(String username, String password) {
         Optional<User> userOptional = authenticationService.authenticate(username, password);
         return userOptional.flatMap(u -> trainerRepository.findByUsername(username));
@@ -208,6 +211,7 @@ public class TrainerServiceImpl implements TrainerService {
      * Finds a trainer by username (requires authentication)
      */
     @Override
+    @Transactional(readOnly = true)
     public Optional<Trainer> findByUsername(String username) {
         if (isBlank(username)) {
             return Optional.empty();
@@ -219,6 +223,7 @@ public class TrainerServiceImpl implements TrainerService {
      * Finds a trainer by ID (requires authentication)
      */
     @Override
+    @Transactional(readOnly = true)
     public Optional<Trainer> findById(Long id) {
         if (id == null) {
             return Optional.empty();
