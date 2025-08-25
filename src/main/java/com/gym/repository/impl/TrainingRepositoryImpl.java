@@ -14,7 +14,6 @@ import com.gym.repository.TrainingRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-import jakarta.transaction.Transactional;
 
 @Repository
 public class TrainingRepositoryImpl implements TrainingRepository {
@@ -25,7 +24,6 @@ public class TrainingRepositoryImpl implements TrainingRepository {
     private EntityManager entityManager;
 
     @Override
-    @Transactional
     public void save(Training training) {
         try {
             if (training.getId() == null) {
@@ -164,7 +162,6 @@ public class TrainingRepositoryImpl implements TrainingRepository {
     }
 
     @Override
-    @Transactional
     public void delete(Training training) {
         try {
             log.debug("Deleting training: {}", training.getName());

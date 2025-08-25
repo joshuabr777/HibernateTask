@@ -12,7 +12,6 @@ import com.gym.repository.UserRepository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
@@ -23,7 +22,6 @@ public class UserRepositoryImpl implements UserRepository {
     private EntityManager entityManager;
 
     @Override
-    @Transactional
     public void save(User user) {
         try {
             if (user.getId() == null) {
@@ -95,7 +93,6 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
     @Override
-    @Transactional
     public void delete(User user) {
         try {
             log.debug("Deleting user with username: {}", user.getUsername());

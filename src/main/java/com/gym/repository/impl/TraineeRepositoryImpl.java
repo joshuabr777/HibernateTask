@@ -13,7 +13,6 @@ import com.gym.repository.TraineeRepository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 
 @Repository
 public class TraineeRepositoryImpl implements TraineeRepository {
@@ -24,7 +23,6 @@ public class TraineeRepositoryImpl implements TraineeRepository {
     private EntityManager entityManager;
 
     @Override
-    @Transactional
     public void save(Trainee trainee) {
         try {
             if (trainee.getId() == null) {
@@ -82,7 +80,6 @@ public class TraineeRepositoryImpl implements TraineeRepository {
     }
 
     @Override
-    @Transactional
     public void delete(Trainee trainee) {
         try {
             log.debug("Deleting trainee with username: {}", trainee.getUser().getUsername());
