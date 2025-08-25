@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <!-- Rolling file to prevent huge logs -->
+        <RollingFile name="FileLogger" 
+                     fileName="logs/gymapp.log"
+                     filePattern="logs/gymapp-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%t] %logger{36} - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="7"/>
+        </RollingFile>
+
+        <Console name="ConsoleLogger" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss} %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.gym" level="DEBUG"/>
+        
+        <!-- Hibernate SQL (useful for debugging) -->
+        <Logger name="org.hibernate.SQL" level="DEBUG"/>
+        
+        <Root level="INFO">
+            <AppenderRef ref="FileLogger"/>
+            <AppenderRef ref="ConsoleLogger"/>
+        </Root>
+    </Loggers>
+</Configuration>

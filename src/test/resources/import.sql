@@ -1,0 +1,17 @@
+INSERT INTO users (first_name, last_name, username, password, is_active) VALUES ('John', 'Doe', 'trainee_user', 'password123', true);
+INSERT INTO users (first_name, last_name, username, password, is_active) VALUES ('Jane', 'Smith', 'trainer_user', 'password456', true);
+INSERT INTO users (first_name, last_name, username, password, is_active) VALUES ('Mike', 'Wilson', 'trainer_mike', 'password789', true);
+INSERT INTO users (first_name, last_name, username, password, is_active) VALUES ('Sarah', 'Johnson', 'trainee_sarah', 'passwordabc', true);
+INSERT INTO training_types (training_type_name) VALUES ('Strength');
+INSERT INTO training_types (training_type_name) VALUES ('Cardio');
+INSERT INTO training_types (training_type_name) VALUES ('Yoga');
+INSERT INTO trainees (user_id, date_of_birth, address) VALUES (1, '1995-05-15', '123 Main St');
+INSERT INTO trainees (user_id, date_of_birth, address) VALUES (4, '1990-08-20', '456 Oak Ave');
+INSERT INTO trainers (user_id, specialization_id) VALUES (2, 1);
+INSERT INTO trainers (user_id, specialization_id) VALUES (3, 2);
+INSERT INTO trainings (training_name, training_type_id, training_duration, training_date, trainer_id, trainee_id) VALUES ('Morning Workout', 1, 60, '2025-01-10', 1, 1);
+INSERT INTO trainings (training_name, training_type_id, training_duration, training_date, trainer_id, trainee_id) VALUES ('Evening Cardio', 2, 45, '2025-01-11', 2, 1);
+INSERT INTO trainings (training_name, training_type_id, training_duration, training_date, trainer_id, trainee_id) VALUES ('Strength Session', 1, 75, '2025-01-12', 1, 2);
+INSERT INTO trainee_trainer (trainee_id, trainer_id) VALUES (1, 1);
+INSERT INTO trainee_trainer (trainee_id, trainer_id) VALUES (1, 2);
+INSERT INTO trainee_trainer (trainee_id, trainer_id) VALUES (2, 1);
