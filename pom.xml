@@ -31,27 +31,43 @@
   </dependencyManagement>
 
   <dependencies>
+    <!-- Spring Web (RestController) -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <version>3.5.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+      <version>3.5.5</version>
+    </dependency>
     <!-- Spring Core & Context -->
     <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
         <version>6.1.7</version>
     </dependency>
-    
+    <!-- Swagger 2 (Springfox) -->
+    <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-boot-starter</artifactId>
+        <version>3.0.0</version>
+    </dependency>
     <!-- Hibernate Core -->
     <dependency>
       <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-core</artifactId>
       <version>${hibernate.version}</version>
     </dependency>
-    
+
     <!-- Jakarta Persistence API (for runtime) -->
     <dependency>
         <groupId>jakarta.persistence</groupId>
         <artifactId>jakarta.persistence-api</artifactId>
         <version>${jakarta.persistence.version}</version>
     </dependency>
-    
+
     <!-- Lombok for code reduction -->
     <dependency>
         <groupId>org.projectlombok</groupId>
@@ -59,7 +75,7 @@
         <version>1.18.32</version>
         <scope>provided</scope>
     </dependency>
-    
+
     <!-- SLF4J -->
     <dependency>
         <groupId>org.slf4j</groupId>
@@ -87,7 +103,7 @@
     </dependency>
 
     <!-- TEST DEPENDENCIES -->
-    
+
     <!-- JUnit 5 -->
     <dependency>
         <groupId>org.junit.jupiter</groupId>
@@ -115,7 +131,7 @@
         <version>2.1.214</version>
         <scope>test</scope>
     </dependency>
-    
+
     <!-- Hibernate Testing Dependencies -->
     <dependency>
         <groupId>org.hibernate.orm</groupId>
