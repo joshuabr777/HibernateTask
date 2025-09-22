@@ -36,7 +36,13 @@ public class TraineeController {
     @PostMapping("/trainees")
     public ResponseEntity<TraineeRegistrationResponse> registerTrainee(
             @Valid @RequestBody TraineeRegistrationRequest request) {
- //TODO: Implement the method
-            return ResponseEntity.ok().body(null);
+                
+        String transactionId = java.util.UUID.randomUUID().toString();
+        log.info("Starting operation /trainees, transactionId: {}, request: {}", transactionId, request);
+        // delegate to facade
+        TraineeRegistrationResponse response = facade.createTrainee(request);
+
+        log.info("Completed operation /trainees, transactionId: {}", transactionId);
+        return ResponseEntity.ok(response);
     }
 }

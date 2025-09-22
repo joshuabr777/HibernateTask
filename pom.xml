@@ -68,6 +68,13 @@
         <version>${jakarta.persistence.version}</version>
     </dependency>
 
+    <!-- MapStruct core -->
+    <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct</artifactId>
+        <version>1.5.5.Final</version> <!-- Check for latest version -->
+    </dependency>
+    
     <!-- Lombok for code reduction -->
     <dependency>
         <groupId>org.projectlombok</groupId>
@@ -208,6 +215,20 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.6.1</version>
         </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.11.0</version>
+            <configuration>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>org.mapstruct</groupId>
+                        <artifactId>mapstruct-processor</artifactId>
+                        <version>1.5.5.Final</version>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
+          </plugin>
       </plugins>
     </pluginManagement>
   </build>

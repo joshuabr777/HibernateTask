@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.gym.dto.trainee.TraineeRegistrationRequest;
 import com.gym.entity.Trainee;
 import com.gym.entity.Trainer;
 import com.gym.entity.Training;
 
 public interface TraineeService {
-    Trainee createTrainee(String firstName, String lastName, LocalDate dateOfBirth, String address);
+    Trainee createTrainee(Trainee trainee, String firstName, String lastName);
 
     Optional<Trainee> authenticateTrainee(String username, String password);
 

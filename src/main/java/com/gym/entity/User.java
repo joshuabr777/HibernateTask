@@ -32,5 +32,5 @@ public class User implements Serializable{
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "is_active", nullable = false)
-    private boolean isActive;
+    private Boolean isActive;
 }

@@ -4,10 +4,24 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.gym.dto.trainee.TraineeProfileResponse;
+import com.gym.dto.trainee.TraineeRegistrationRequest;
+import com.gym.dto.trainee.TraineeRegistrationResponse;
+import com.gym.dto.trainee.UpdateTraineeProfileRequest;
+import com.gym.dto.trainee.UpdateTraineeTrainersRequest;
+import com.gym.dto.trainer.TrainerProfileResponse;
+import com.gym.dto.trainer.TrainerRegistrationRequest;
+import com.gym.dto.trainer.TrainerRegistrationResponse;
+import com.gym.dto.trainer.TrainerSummary;
+import com.gym.dto.trainer.UpdateTrainerProfileRequest;
+import com.gym.dto.training.AddTrainingRequest;
+import com.gym.dto.training.TrainingSummary;
+import com.gym.dto.training_type.TrainingTypeResponse;
 import com.gym.entity.Trainee;
 import com.gym.entity.Trainer;
 import com.gym.entity.Training;
@@ -17,6 +31,10 @@ import com.gym.service.TraineeService;
 import com.gym.service.TrainerService;
 import com.gym.service.TrainingService;
 import com.gym.service.TrainingTypeService;
+import com.gym.util.mapper.TraineeMapper;
+import com.gym.util.mapper.TrainerMapper;
+import com.gym.util.mapper.TrainingMapper;
+import com.gym.util.mapper.TrainingTypeMapper;
 
 @Component
 public class GymFacadeImpl implements GymFacade {
@@ -26,31 +44,47 @@ public class GymFacadeImpl implements GymFacade {
     private final TrainingService trainingService;
     private final TrainingTypeService trainingTypeService;
 
+    private final TraineeMapper traineeMapper;
+    private final TrainerMapper trainerMapper;
+    private final TrainingMapper trainingMapper;
+    private final TrainingTypeMapper trainingTypeMapper;
+
     @Autowired
     public GymFacadeImpl(TraineeService traineeService,
                          TrainerService trainerService,
                          TrainingService trainingService,
-                         TrainingTypeService trainingTypeService) {
+                         TrainingTypeService trainingTypeService,
+                         TraineeMapper traineeMapper,
+                         TrainerMapper trainerMapper,
+                         TrainingMapper trainingMapper,
+                         TrainingTypeMapper trainingTypeMapper) {
         this.traineeService = traineeService;
         this.trainerService = trainerService;
         this.trainingService = trainingService;
         this.trainingTypeService = trainingTypeService;
+        this.traineeMapper = traineeMapper;
+        this.trainerMapper = trainerMapper;
+        this.trainingMapper = trainingMapper;
+        this.trainingTypeMapper = trainingTypeMapper;
     }
 
     // ---------------- Trainee ----------------
     @Override
-    public Trainee createTrainee(String firstName, String lastName, LocalDate dateOfBirth, String address) {
-        return traineeService.createTrainee(firstName, lastName, dateOfBirth, address);
+    public TraineeRegistrationResponse createTrainee(TraineeRegistrationRequest request) {
+        Trainee trainee = traineeMapper.toEntity(request);
+        Trainee created = traineeService.createTrainee(
+                trainee,
+                trainee.getUser().getFirstName(),
+                trainee.getUser().getLastName()
+        );
+        return traineeMapper.toRegistrationResponse(created);
     }
 
     @Override
-    public Optional<Trainee> authenticateTrainee(String username, String password) {
-        return traineeService.authenticateTrainee(username, password);
-    }
-
-    @Override
-    public Trainee updateTrainee(String username, String password, Trainee trainee) {
-        return traineeService.updateTrainee(username, password, trainee);
+    public TraineeProfileResponse updateTrainee(String username, String password, UpdateTraineeProfileRequest request) {
+        Trainee trainee = traineeMapper.toEntity(request);
+        Trainee updated = traineeService.updateTrainee(username, password, trainee);
+        return traineeMapper.toProfileResponse(updated);
     }
 
     @Override
@@ -74,34 +108,44 @@ public class GymFacadeImpl implements GymFacade {
     }
 
     @Override
-    public List<Training> getTraineeTrainings(String username, String password, LocalDate fromDate, LocalDate toDate, String trainerName, String trainingTypeName) {
-        return traineeService.getTraineeTrainings(username, password, fromDate, toDate, trainerName, trainingTypeName);
+    public List<TrainingSummary> getTraineeTrainings(String username, String password,
+                                                     LocalDate fromDate, LocalDate toDate,
+                                                     String trainerName, String trainingTypeName) {
+        return trainingMapper.toSummaryList(
+                traineeService.getTraineeTrainings(username, password, fromDate, toDate, trainerName, trainingTypeName)
+        );
     }
 
     @Override
-    public List<Trainer> getUnassignedTrainers(String username, String password) {
-        return traineeService.getUnassignedTrainers(username, password);
+    public List<TrainerSummary> getUnassignedTrainers(String username, String password) {
+        return trainerMapper.toSummaryList(traineeService.getUnassignedTrainers(username, password));
     }
 
     @Override
-    public boolean updateTraineeTrainers(String username, String password, Set<Trainer> trainers) {
+    public boolean updateTraineeTrainers(String username, String password, UpdateTraineeTrainersRequest request) {
+        Set<Trainer> trainers = request.getTrainerUsernames().stream()
+                .map(trainerService::findByUsername)
+                .collect(Collectors.toSet());
         return traineeService.updateTraineeTrainers(username, password, trainers);
     }
 
     // ---------------- Trainer ----------------
     @Override
-    public Trainer createTrainer(String firstName, String lastName, String specializationName) {
-        return trainerService.createTrainer(firstName, lastName, specializationName);
+    public TrainerRegistrationResponse createTrainer(TrainerRegistrationRequest request) {
+        Trainer trainer = trainerMapper.toEntity(request);
+        Trainer created = trainerService.createTrainer(
+                trainer.getUser().getFirstName(),
+                trainer.getUser().getLastName(),
+                trainer.getUser().getUsername()
+        );
+        return trainerMapper.toRegistrationResponse(created);
     }
 
     @Override
-    public Optional<Trainer> authenticateTrainer(String username, String password) {
-        return trainerService.authenticateTrainer(username, password);
-    }
-
-    @Override
-    public Trainer updateTrainer(String username, String password, Trainer trainer) {
-        return trainerService.updateTrainer(username, password, trainer);
+    public TrainerProfileResponse updateTrainer(String username, String password, UpdateTrainerProfileRequest request) {
+        Trainer trainer = trainerMapper.toEntity(request);
+        Trainer updated = trainerService.updateTrainer(username, password, trainer);
+        return trainerMapper.toProfileResponse(updated);
     }
 
     @Override
@@ -120,19 +164,34 @@ public class GymFacadeImpl implements GymFacade {
     }
 
     @Override
-    public List<Training> getTrainerTrainings(String username, String password, LocalDate fromDate, LocalDate toDate, String traineeName) {
-        return trainerService.getTrainerTrainings(username, password, fromDate, toDate, traineeName);
+    public List<TrainingSummary> getTrainerTrainings(String username, String password,
+                                                     LocalDate fromDate, LocalDate toDate,
+                                                     String traineeName) {
+        return trainingMapper.toSummaryList(
+                trainerService.getTrainerTrainings(username, password, fromDate, toDate, traineeName)
+        );
     }
 
     // ---------------- Training ----------------
     @Override
-    public Training addTraining(String traineeUsername, String trainerUsername, String trainingName, Long trainingTypeId, LocalDate trainingDate, Integer duration, String authenticatedUsername, String password) {
-        return trainingService.addTraining(traineeUsername, trainerUsername, trainingName, trainingTypeId, trainingDate, duration, authenticatedUsername, password);
+    public TrainingSummary addTraining(AddTrainingRequest request, String authenticatedUsername, String password) {
+        Training training = trainingMapper.toEntity(request);
+        Training created = trainingService.addTraining(
+                training,
+                request.getTraineeUsername(),
+                request.getTrainerUsername(),
+                request.getTrainingType(),
+                request.getTrainingDate(),
+                authenticatedUsername,
+                password
+        );
+        return trainingMapper.toSummary(created);
     }
 
     @Override
-    public Training updateTraining(Training training, String authenticatedUsername, String password) {
-        return trainingService.updateTraining(training, authenticatedUsername, password);
+    public TrainingSummary updateTraining(Training training, String authenticatedUsername, String password) {
+        Training updated = trainingService.updateTraining(training, authenticatedUsername, password);
+        return trainingMapper.toSummary(updated);
     }
 
     @Override
@@ -147,17 +206,21 @@ public class GymFacadeImpl implements GymFacade {
 
     // ---------------- TrainingType ----------------
     @Override
-    public Optional<TrainingType> findTrainingTypeById(Long id) {
-        return trainingTypeService.findById(id);
+    public TrainingTypeResponse findTrainingTypeById(Long id) {
+        return trainingTypeService.findById(id)
+                .map(trainingTypeMapper::toResponse)
+                .orElse(null);
     }
 
     @Override
-    public Optional<TrainingType> findTrainingTypeByName(String name) {
-        return trainingTypeService.findByName(name);
+    public TrainingTypeResponse findTrainingTypeByName(String name) {
+        return trainingTypeService.findByName(name)
+                .map(trainingTypeMapper::toResponse)
+                .orElse(null);
     }
 
     @Override
-    public List<TrainingType> getAllTrainingTypes() {
-        return trainingTypeService.findAll();
+    public List<TrainingTypeResponse> getAllTrainingTypes() {
+        return trainingTypeMapper.toResponseList(trainingTypeService.findAll());
     }
 }

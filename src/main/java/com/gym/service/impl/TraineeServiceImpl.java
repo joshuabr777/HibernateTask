@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import com.gym.dto.trainee.TraineeRegistrationRequest;
 import com.gym.entity.Trainee;
 import com.gym.entity.Trainer;
 import com.gym.entity.Training;
@@ -54,7 +55,7 @@ public class TraineeServiceImpl implements TraineeService {
      */
     @Override
     @Transactional
-    public Trainee createTrainee(String firstName, String lastName, LocalDate dateOfBirth, String address) {
+    public Trainee createTrainee(TraineeRegistrationRequest trainee) {
         validateRequiredFields(firstName, lastName);
 
         log.debug("Creating new trainee");
@@ -273,14 +274,5 @@ public class TraineeServiceImpl implements TraineeService {
     private boolean changeTraineeActiveStatus(String username, String password, boolean isActive) {
         authenticateOrThrow(username, password);
         return isActive ? userService.activateUser(username) : userService.deactivateUser(username);
-    }
-
-    private void validateRequiredFields(String firstName, String lastName) {
-        if (isBlank(firstName)) throw new IllegalArgumentException("First name cannot be null or empty");
-        if (isBlank(lastName)) throw new IllegalArgumentException("Last name cannot be null or empty");
-    }
-
-    private boolean isBlank(String value) {
-        return value == null || value.trim().isEmpty();
     }
 }

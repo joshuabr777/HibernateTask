@@ -27,4 +27,8 @@ public class AddTrainingRequest {
 
     @Positive
     private Double trainingDuration;
+
+    @NotBlank
+    private String trainingType;
+
 }
